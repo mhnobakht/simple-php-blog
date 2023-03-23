@@ -57,4 +57,81 @@ class Auth {
        header('Location: login.php');die;
     }
 
+
+    public function login($formData) {
+        $csrf_token = $formData['csrf_token'];
+
+        if(!CsrfToken::validate($csrf_token)) {
+            Semej::set('danger', 'error', "Missing CSRF Token.");
+            header('Location: login.php');die;
+        }
+
+        $email = $formData['email'];
+        $password = md5($formData['password'].SALT);
+        $user = $this->dbs->select("users", "email = '$email'");
+
+        if(count($user) == 0) {
+            Semej::set('danger', 'error', "incorrect Email or password.");
+            header('Location: login.php');die;
+        }
+        
+        if($user[0]['password'] != $password) {
+            Semej::set('danger', 'error', "incorrect Email or password.");
+            header('Location: login.php');die;
+        }
+
+        if(!$user[0]['is_active']) {
+            Semej::set('danger', 'error', "Your Account is not active.");
+            header('Location: login.php');die;
+        }
+
+        $user = $user[0];
+
+        $_SESSION['auth_user'] = [
+            "username" => $user['username'],
+            "id" => $user['id'],
+            "email" => $user['email']
+        ];
+
+        // generate auth token
+        $token = $this->generateToken($user['email']);
+
+        $_SESSION['auth_token'] = $token;
+
+        header('Location: dashboard/index.php');die;
+        
+    }
+
+    protected function generateToken($email) {
+        $remote_addr = $_SERVER['REMOTE_ADDR'];
+        $token = sha1(SALT.$remote_addr.$email);
+        return $token;
+    }
+
+    public function validateToken() {
+        if(!isset($_SESSION)) {
+            return false;
+        }
+
+        if(!isset($_SESSION['auth_user']) || !isset($_SESSION['auth_token'])) {
+            return false;
+        }
+
+        $email = $_SESSION['auth_user']['email'];
+        $token = $_SESSION['auth_token'];
+
+        $generated_token = $this->generateToken($email);
+
+        if($token != $generated_token) {
+            return false;
+        }
+
+        return true;
+        
+    }
+
+    public function logout() {
+        session_unset();
+        session_destroy();
+    }
 }

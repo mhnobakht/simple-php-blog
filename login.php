@@ -1,5 +1,11 @@
 <?php
 include_once 'autoload.php';
+if(isset($_POST['login_btn']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = Sanitizer::sanitize($_POST['frm']);
+    
+    $auth = new Auth();
+    $auth->login($data);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,13 +30,14 @@ include_once 'autoload.php';
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                                     <div class="card-body">
                                         <?php Semej::show(); ?>
-                                        <form>
-                                            <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
+                                        <form method='post' action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                                        <input type="hidden" name="frm[csrf_token]" value="<?php echo CsrfToken::generate(); ?>">    
+                                        <div class="form-floating mb-3">
+                                                <input name="frm[email]" class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
                                                 <label for="inputEmail">Email address</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputPassword" type="password" placeholder="Password" />
+                                                <input name="frm[password]" class="form-control" id="inputPassword" type="password" placeholder="Password" />
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                             <div class="form-check mb-3">
@@ -39,7 +46,7 @@ include_once 'autoload.php';
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" href="password.html">Forgot Password?</a>
-                                                <a class="btn btn-primary" href="index.html">Login</a>
+                                                <input type="submit" value="Login" class="btn btn-primary" name="login_btn">
                                             </div>
                                         </form>
                                     </div>
