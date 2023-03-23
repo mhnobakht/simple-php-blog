@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__.'/../config.php';
-require_once __DIR__.'/Sanitizer.php';
 
 class Database {
 
@@ -28,8 +27,6 @@ class Database {
 
     // Method to insert data into a table
     public function insert($table, $data) {
-        $data  = Sanitizer::sanitize($data);
-        $table = Sanitizer::sanitize($table);
         $keys = implode(',', array_keys($data));
         $values = implode(',', array_fill(0, count($data), '?'));
         $sql = "INSERT INTO $table ($keys) VALUES ($values)";
@@ -40,8 +37,6 @@ class Database {
 
     // Method to update data in a table
     public function update($table, $data, $condition) {
-        $data  = Sanitizer::sanitize($data);
-        $table = Sanitizer::sanitize($table);
         $set = [];
         foreach($data as $key => $value) {
             $set[] = "$key = ?";
