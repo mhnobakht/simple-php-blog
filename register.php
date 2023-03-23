@@ -31,8 +31,14 @@ if(isset($_POST['create_btn']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                                     <div class="card-body">
+                                        <?php
+                                        
+                                        Semej::show(); 
+    
+                                        ?>
                                         <form method='post' action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-                                            <div class="row mb-3">
+                                        <input type="hidden" name="frm[csrf_token]" value="<?php echo CsrfToken::generate(); ?>">    
+                                        <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
                                                         <input name="frm[firstname]" class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" />

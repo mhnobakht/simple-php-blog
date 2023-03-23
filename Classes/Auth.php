@@ -9,9 +9,17 @@ class Auth {
     }
 
     public function register($formData) {
+
+        $csrf_token = $formData['csrf_token'];
+
+        if(!CsrfToken::validate($csrf_token)) {
+            Semej::set('danger', 'error', "Missing CSRF Token.");
+            header('Location: register.php');die;
+        }
         
         if($formData['password'] != $formData['passwordConfirm']) {
-            echo 'not matched password';die;
+            Semej::set('danger', 'error', "Password doesn't match.");
+            header('Location: register.php');die;
         }
 
         $email = $formData['email'];
@@ -19,7 +27,8 @@ class Auth {
         $checkEmail = (count($this->dbs->select('users', "email = '$email'")) > 0) ? true : false;
 
        if($checkEmail) {
-        echo 'Email Exists';die;
+        Semej::set('danger', 'error', "Email Exists.");
+            header('Location: register.php');die;
        }
        
 
@@ -37,7 +46,15 @@ class Auth {
        ];
 
 
-       $this->dbs->insert('users', $data);
+       $result = $this->dbs->insert('users', $data);
+
+       if($result != 1) {
+            Semej::set('danger', 'error', "Signup failed. tray again later.");
+            header('Location: register.php');die;
+       }
+
+       Semej::set('success', 'OK', "Please login now.");
+       header('Location: login.php');die;
     }
 
 }
