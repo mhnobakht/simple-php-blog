@@ -98,7 +98,7 @@ class Auth {
 
         $_SESSION['auth_token'] = $token;
 
-        header('Location: dashboard/index.php');die;
+        header('Location: dashboard.php');die;
         
     }
 
