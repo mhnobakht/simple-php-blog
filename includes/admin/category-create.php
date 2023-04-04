@@ -19,7 +19,7 @@ if(isset($_POST['category_create_btn']) && $_SERVER['REQUEST_METHOD'] === 'POST'
         </div>
         <div class="form-group form-floating mb-3">
             <select name="frm[parent_id]" id="parent_id" class="form-select">
-                <option value="0">Without parent</option>
+                <option value="">Without parent</option>
                 <?php
                 foreach($parents as $parent):
                 ?>

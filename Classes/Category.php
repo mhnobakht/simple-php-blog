@@ -10,7 +10,7 @@ class Category {
     }
 
     public function getParents() {
-        $parents = $this->dbs->select('categories', "parent_id = '0'");
+        $parents = $this->dbs->select('categories', "parent_id IS NULL");
         return $parents;
     }
 
@@ -26,7 +26,7 @@ class Category {
 
         $data = [
             'title' => $formData['title'],
-            'parent_id' => $formData['parent_id']
+            'parent_id' => ($formData['parent_id'] === '') ? null : $formData['parent_id']
         ];
 
         $result = $this->dbs->insert('categories', $data);
@@ -79,11 +79,24 @@ class Category {
 
     }
 
+    public function getSubCategories($id) {
+        $subCategories = $this->dbs->select('categories', "parent_id = '$id'");
+        return $subCategories;
+    }
+
 
     public function delete($id) {
-        $this->dbs->delete('categories', "id = '$id'");
+        $subs = $this->getSubCategories($id);
+        
 
-        Semej::set('success', 'OK', 'category deleted successfully.');
+        if(count($subs) == 0) {
+            $this->dbs->delete('categories', "id = '$id'");
+            Semej::set('success', 'OK', 'category deleted successfully.');
+            header('Location: dashboard.php?page=categories');die;
+        }
+
+
+        Semej::set('warning', 'Warning', 'This Category has Subcategories.');
         header('Location: dashboard.php?page=categories');die;
     }
 
