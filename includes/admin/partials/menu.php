@@ -12,4 +12,8 @@
         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
         Categories
     </a>
+    <a class="nav-link" href="dashboard.php?page=posts">
+        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+        Posts
+    </a>
 </div>
