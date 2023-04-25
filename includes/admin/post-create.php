@@ -1,13 +1,16 @@
 <?php
+$category = new Category();
+$subCategories = $category->getSubCategories();
 
 if(isset($_POST['create_post_btn']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = $_POST['frm'];
     $file = $_FILES['file'];
 
-    $_file = new File();
-    $image = $_file->upload($file);
+    $post = new Post();
+    $post->create($data, $file);
 
-    var_dump($image);
+    // $_file = new File();
+    // $image = $_file->upload($file);
 }
 
 ?>
@@ -22,6 +25,18 @@ if(isset($_POST['create_post_btn']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group form-floating mb-3">
             <textarea name="frm[description]" id="description" cols="30" rows="10" class="form-control"></textarea>
             <label for="description">description</label>
+        </div>
+        <div class="form-group mb-3">
+            <label for="categories">Categories:</label>
+            <select name="frm[categories][]" id="categories" class="form-control" multiple size="3">
+                <?php
+                foreach($subCategories as $subCategory):
+                ?>
+                <option value="<?php echo $subCategory['id']; ?>"><?php echo $subCategory['title']; ?></option>
+                <?php
+                endforeach;
+                ?>
+            </select>
         </div>
         <div class="form-group form-floating mb-3">
             <input name="file" type="file" id="formFile" class="form-control">

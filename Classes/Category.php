@@ -79,8 +79,13 @@ class Category {
 
     }
 
-    public function getSubCategories($id) {
-        $subCategories = $this->dbs->select('categories', "parent_id = '$id'");
+    public function getSubCategories($id = null) {
+        if($id === null) {
+            $subCategories = $this->dbs->select('categories', "parent_id IS NOT NULL");
+        }else{
+            $subCategories = $this->dbs->select('categories', "parent_id = '$id'");
+        }
+        
         return $subCategories;
     }
 

@@ -35,6 +35,11 @@ class Database {
         return $stmt->rowCount();
     }
 
+    // get last id
+    public function lastInsertId() {
+        return $this->connection->lastInsertId();
+    }
+
     // Method to update data in a table
     public function update($table, $data, $condition) {
         $set = [];
