@@ -104,4 +104,10 @@ class User {
 
     }
 
+
+    public function getUser($id) {
+        $user = $this->dbs->select('users', "id = $id");
+
+        return $user[0];
+    }
 }

@@ -36,4 +36,9 @@ class PostCategory {
 
         return true;
     }
+
+    public function getCategories($post_id) {
+        $categories = $this->dbs->select($this->table, "post_id = $post_id");
+        return $categories;
+    }
 }

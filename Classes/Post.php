@@ -44,4 +44,38 @@ class Post {
         }
 
     }
+
+    public function getAll() {
+        
+        // get posts
+        $posts = $this->dbs->all('posts');
+        
+        
+        foreach($posts as $key => $post) {
+            // add user to post
+            $_user = new User();
+            $user = $_user->getUser($post['user_id']);
+            $posts[$key]['user'] =  $user;
+
+            // add categories to post
+            $post_category = new PostCategory();
+            $category_ids = $post_category->getCategories($post['id']);
+
+            // get category title
+            $categories = [];
+            foreach($category_ids as $category_id) {
+                $id = $category_id['category_id'];
+                $category = $this->dbs->select('categories', "id = $id");
+                array_push($categories, $category[0]);
+            }
+
+            $posts[$key]['categories'] = $categories;
+        }
+
+        return $posts;
+    }
+
+    
+
+    
 }
