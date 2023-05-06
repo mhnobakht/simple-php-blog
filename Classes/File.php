@@ -42,4 +42,13 @@ class File {
         }
 
     }
+
+
+    public function delete($path) {
+        if(file_exists($path)) {
+            unlink($path);
+        }
+
+        return true;
+    }
 }

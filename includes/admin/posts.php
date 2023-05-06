@@ -38,10 +38,10 @@ $posts = $post->getAll();
                 </td>
                 <td>
                 <td>
-                    <a href="#">
+                    <a href="dashboard.php?page=post-edit&post_id=<?php echo $post['id']; ?>">
                         <button class="btn btn-warning">Edit</button>
                     </a>
-                    <a href="#">
+                    <a href="dashboard.php?page=post-delete&post_id=<?php echo $post['id']; ?>">
                         <button class="btn btn-danger">Delete</button>
                     </a>
                 </td>

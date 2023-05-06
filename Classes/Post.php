@@ -75,7 +75,71 @@ class Post {
         return $posts;
     }
 
+
+    public function edit($post_id) {
+        $post = $this->dbs->select('posts', "id = $post_id");
+
+        // add categories to post
+        $post_category = new PostCategory();
+        $category_ids = $post_category->getCategories($post_id);
+
+        // get category title
+        $categories = [];
+        foreach($category_ids as $category_id) {
+            $id = $category_id['category_id'];
+            $category = $this->dbs->select('categories', "id = $id");
+            array_push($categories, $category[0]);
+        }
+
+        $post = $post[0];
+
+        $post['categories'] = $categories;
+
+        return $post;
+    }
+
+
+    public function update($post_id, $formData, $formFile) {
+
+        $post = $this->dbs->select('posts', "id = $post_id");
+
+        // sanitize form data
+        $formData = Sanitizer::sanitize($formData);
+
+        // upload image
+        $file = new File();
+        $image = $file->upload($formFile);
+
+        $data = [
+            "title" => $formData['title'],
+            'description' => $formData['description'],
+        ];
+
+        if($image != false) {
+            $data['image'] = $image;
+            $file->delete($post[0]['image']);
+        }
+
+        $this->dbs->update('posts', $data, "id = $post_id");
+
+        $category_ids = $formData['categories'];
+        $post_category = new PostCategory();
+        if($post_category->sync($post_id, $category_ids)) {
+            Semej::set('success', 'OK', 'Post Updated');
+            header('Location: dashboard.php?page=posts');die;
+        }
+    }
     
 
-    
+    public function delete($post_id) {
+        $post = $this->dbs->select('posts', "id = $post_id");
+
+        $file = new File();
+        $file->delete($post[0]['image']);
+
+        $this->dbs->delete('posts', "id = $post_id");
+
+        Semej::set('success', 'OK', 'Post deleted.');
+        header('Location: dashboard.php?page=posts');die;
+    }
 }
