@@ -55,7 +55,7 @@ $test = $posts[0];
                     ?>
                     <!-- Post preview-->
                     <div class="post-preview">
-                        <a href="post.html">
+                        <a href="post.php?id=<?php echo $post['id']; ?>">
                             <h2 class="post-title"><?php echo $post['title']; ?></h2>
                             <h3 class="post-subtitle"><?php echo mb_strimwidth($post['description'], 0, 50, '...'); ?></h3>
                         </a>
