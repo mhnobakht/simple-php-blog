@@ -45,7 +45,7 @@ class Post {
 
     }
 
-    public function getAll() {
+    public function getAll($filter_id = null) {
         
         // get posts
         $posts = $this->dbs->all('posts');
@@ -70,6 +70,22 @@ class Post {
             }
 
             $posts[$key]['categories'] = $categories;
+        }
+
+    
+        // filter post by category id
+        if($filter_id !== null) {
+            $filteredPosts = [];
+
+            foreach($posts as $post) {
+                $categoryIds = array_column($post['categories'], 'id');
+
+                if(in_array($filter_id, $categoryIds)) {
+                    $filteredPosts[] = $post;
+                }
+            }
+
+            $posts = $filteredPosts;
         }
 
         return $posts;

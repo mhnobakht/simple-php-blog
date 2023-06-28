@@ -31,7 +31,7 @@ $categoryParents = $category->getParents();
                             <?php
                             foreach($subcategories as $subcategory):
                             ?>
-                            <a href="#" class="dropdown-item"><?php echo $subcategory['title']; ?></a>
+                            <a href="index.php?filter_id=<?php echo $subcategory['id']; ?>" class="dropdown-item"><?php echo $subcategory['title']; ?></a>
                             <?php
                             endforeach;
                             ?>

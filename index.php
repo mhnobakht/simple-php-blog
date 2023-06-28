@@ -1,10 +1,14 @@
 <?php
 require_once 'autoload.php';
 
-$post = new Post();
-$posts = $post->getAll();
+$filter_id = null;
 
-$test = $posts[0];
+if(isset($_GET['filter_id'])) {
+    $filter_id = $_GET['filter_id'];
+}
+
+$post = new Post();
+$posts = $post->getAll($filter_id);
 
 // var_dump($test['user']);die;
 
